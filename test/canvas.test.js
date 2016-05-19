@@ -610,6 +610,31 @@ describe('Canvas', function () {
     assert.equal(0, data[0]);
   });
 
+  it('Context2d#getPixels()', function () {
+    var canvas = new Canvas(3, 6)
+      , ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#f00';
+    ctx.fillRect(0,0,1,6);
+
+    ctx.fillStyle = '#0f0';
+    ctx.fillRect(1,0,1,6);
+
+    ctx.fillStyle = '#00f';
+    ctx.fillRect(2,0,1,6);
+
+    // Full width
+    var imageData = ctx.getImageData(0,0,3,6);
+    var pixels = ctx.getPixels(0,0,3,6);
+    for (var i = 0; i < pixels.length; i++) {
+      var p = pixels[i];
+      assert.equal(p.r, imageData.data[i * 4]);
+      assert.equal(p.g, imageData.data[i * 4 + 1]);
+      assert.equal(p.b, imageData.data[i * 4 + 2]);
+      assert.equal(p.a, imageData.data[i * 4 + 3]);
+    }
+  });
+
   it('Context2d#createPattern(Canvas)', function () {
     var pattern = new Canvas(2,2)
       , checkers = pattern.getContext('2d');
